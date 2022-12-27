@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:irads_app/login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,8 @@ class _HomePageState extends State<HomePage> {
 
     if (currentUser == null) {
       // Redirect the user to the login page
-      Navigator.pushReplacementNamed(context, "login");
+      print("USER IS NOT LOGGED IN");
+      Navigator.pushNamed(context, "login");
     } else {
       setState(() {
         currentUserId = currentUser.uid;
@@ -67,10 +69,9 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    
                     // IF THE CONTAINER IS CLICKED
                     onTap: () {
-                      print("THE USER IS GOING IN LIVE VIEW MODE");
+                      Navigator.pushNamed(context, "live_monitoring");
                     },
 
                     // LIVE MONITORING
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(
-                            Icons.settings_input_antenna_outlined,
+                            Icons.sensors_rounded,
                             size: 30,
                             color: Colors.red,
                           ),
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(width: 50),
                   GestureDetector(
                     onTap: () {
-                      print("THE USER IS GOING IN PREVIEW MODE");
+                      Navigator.pushNamed(context, "preview_mode");
                     },
                     child: Container(
                       decoration: BoxDecoration(
