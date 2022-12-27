@@ -17,85 +17,130 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.orange,
-        child: Row(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // LOGIN TEXT
-                const Text(
-                  "LOGIN",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "times",
-                  ),
-                ),
-
-                const SizedBox(height: 50),
-
-                // LOGIN FORM WRAPPER
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 70),
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        child: Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // LOGIN TEXT
+                  const Text(
+                    "LOGIN",
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "times new roman",
+                    ),
                   ),
 
-                  // LOGIN FORM
-                  child: Form(
-                      key: _key,
-                      child: Column(
-                        children: [
-                          // EMAIL FORM FIELD
-                          TextFormField(
-                            decoration:
-                                InputDecoration(fillColor: Colors.white),
-                            controller: email,
-                            focusNode: focusNode,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value == null) {
-                                return "The Email Field Is required";
-                              }
-                              return null;
-                            },
-                          ),
+                  const SizedBox(height: 50),
 
-                          const SizedBox(height: 15),
+                  // LOGIN FORM WRAPPER
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 70),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 40),
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
 
-                          // PASSWORD FIELD
-                          TextFormField(
-                            controller: password,
-                            focusNode: focusNode,
-                            obscureText: true,
-                            validator: (value) {
-                              if (value == null) {
-                                return "The Password Field Cant Be Empty";
-                              }
-                              return null;
-                            },
-                          ),
+                    // LOGIN FORM
+                    child: Form(
+                        key: _key,
+                        child: Column(
+                          children: [
+                            // EMAIL FORM FIELD
+                            TextFormField(
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.email_rounded,
+                                  color: Colors.black87,
+                                ),
+                                border: InputBorder.none,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: "Email Address",
+                                labelStyle: const TextStyle(
+                                  // color: Color.fromARGB(255, 255, 26, 103),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              controller: email,
+                              keyboardType: TextInputType.emailAddress,
+                              validator: (value) {
+                                if (value == null) {
+                                  return "The Email Field Is required";
+                                }
+                                return null;
+                              },
+                            ),
 
-                          const SizedBox(height: 15),
+                            const SizedBox(height: 20),
 
-                          // LOGIN BUTTON
-                          ElevatedButton(
-                            onPressed: (() {
-                              print("LOGIN");
-                            }),
-                            child: const Text("LOGIN"),
-                          ),
-                        ],
-                      )),
-                )
-              ],
-            ),
-            Image.asset("assets/images/accident.png"),
-          ],
+                            // PASSWORD FIELD
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  prefixIcon: const Icon(
+                                    Icons.lock,
+                                    color: Colors.black87,
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  border: InputBorder.none,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  labelText: "Password",
+                                  labelStyle: TextStyle(
+                                    color: Colors.pink,
+                                  )),
+                              controller: password,
+                              obscureText: true,
+                              validator: (value) {
+                                if (value == null) {
+                                  return "The Password Field Cant Be Empty";
+                                }
+                                return null;
+                              },
+                            ),
+
+                            const SizedBox(height: 25),
+
+                            // LOGIN BUTTON
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 23, horizontal: 160),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  backgroundColor: Colors.black),
+                              onPressed: (() {
+                                print("LOGIN");
+                              }),
+                              child: const Text("LOGIN"),
+                            ),
+                          ],
+                        )),
+                  )
+                ],
+              ),
+
+              // RIGHT ACCIDENT IMAGE
+              Image.asset(
+                "assets/images/accident.png",
+                width: MediaQuery.of(context).size.width * 0.45,
+              ),
+            ],
+          ),
         ),
       ),
     );
