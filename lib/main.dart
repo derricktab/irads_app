@@ -6,11 +6,17 @@ import 'package:irads_app/homepage.dart';
 import 'package:irads_app/login.dart';
 
 void main() async {
-  runApp(const MyApp());
 
+  // ENSURING THAT FIREBASE IS INITIALIZED
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // INITIALIZING FIREBASE
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  // RUNNING THE APP
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         "login":(context) => const Login(),
-        "hpme":(context) => const HomePage(),
+        "home":(context) => const HomePage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'I-RADS',
