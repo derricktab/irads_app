@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Row(children: [
         Image.asset(
           "assets/images/cameras.png",
@@ -87,10 +88,10 @@ class _HomePageState extends State<HomePage> {
                         children: const [
                           Icon(
                             Icons.sensors_rounded,
-                            size: 30,
+                            size: 70,
                             color: Colors.red,
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 5),
                           Text(
                             "LIVE MONITORING",
                             style: TextStyle(

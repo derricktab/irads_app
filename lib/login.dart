@@ -9,7 +9,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  var _key = GlobalKey<FormState>();
+  final _key = GlobalKey<FormState>();
   var email = TextEditingController();
   var password = TextEditingController();
   var errorMessage;
@@ -138,10 +138,13 @@ class _LoginState extends State<Login> {
                                   context,
                                   "home",
                                 );
+
+                                print("GONE TO HOME");
                               }).onError((error, stackTrace) {
                                 setState(() {
                                   errorMessage = error;
                                 });
+                                print(errorMessage);
                               });
                             }
                           }),

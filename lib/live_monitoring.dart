@@ -1,5 +1,5 @@
-import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:irads_app/full_live_monitoring.dart';
 
 class LiveMonitoring extends StatefulWidget {
   const LiveMonitoring({super.key});
@@ -9,35 +9,109 @@ class LiveMonitoring extends StatefulWidget {
 }
 
 class _LiveMonitoringState extends State<LiveMonitoring> {
-  var videoController =
-      CachedVideoPlayerController.asset("assets/videos/vid1.mp4");
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    videoController.initialize().then((value) {
-      videoController.play();
-    });
-  }
+  List videos = [
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+  ];
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: GridView.builder(
-          itemCount: 15,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemBuilder: ((context, index) {
-            return Container(
-              height: 100,
-              color: Colors.orange,
-            );
-          }),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // LOGO
+                Image.asset("assets/images/logo.png", height: 80),
+                const SizedBox(width: 50),
+                // Available Cameras
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "AVAILABLE CCTV CAMERAS",
+                    style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "PT_Serif"),
+                  ),
+                ),
+              ],
+            ),
+
+            // GRID OF CAMERAS AVAILABLE
+            Expanded(
+              child: GridView.builder(
+                itemCount: videos.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
+                ),
+                itemBuilder: ((context, index) {
+                
+
+                  return InkWell(
+                     onTap: (() {
+                          // GOING TO FULL VIEW OF THE SELECTED CAMERA
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: ((context) {
+                                return FullLiveMonitoring(
+                                  index: index + 1,
+                                  video: videos[index],
+                                );
+                              }),
+                            ),
+                          );
+                          print("GONE TO FULL VIEW");
+                        }),
+                    child: Stack(fit: StackFit.expand,
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 20,
+                            ),
+                            child: Text(
+                              "CAMERA ${index + 1}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 300,
+                          width: 300,
+                          decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius: BorderRadius.circular(20)),                              // Displaying the video
+                              
+                        )
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ],
         ),
       ),
     );
