@@ -144,9 +144,10 @@ class _LoginState extends State<Login> {
                                       vertical: 20,
                                       horizontal: 20,
                                     ),
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: Colors.greenAccent,
                                     content: const AutoSizeText(
                                       "WELCOME TO IRADS!",
+                                      textAlign: TextAlign.center,
                                       maxLines: 1,
                                       minFontSize: 15,
                                     ),

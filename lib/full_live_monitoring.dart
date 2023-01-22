@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+
+import 'package:irads_app/alert_screen.dart';
 
 class FullLiveMonitoring extends StatefulWidget {
   final int? index;
@@ -15,11 +18,21 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
   DateTime current = DateTime.now();
 
   @override
+  void initState() {}
+
+  @override
   Widget build(BuildContext context) {
     Stream<DateTime> timer =
         Stream.periodic(const Duration(milliseconds: 1), (i) {
       current = current.add(const Duration(milliseconds: 1));
       return current;
+    });
+
+    Timer(Duration(seconds: 1), () {
+      Navigator.push(context, MaterialPageRoute(builder: ((context) {
+        return AlertScreen(
+            index: widget.index, image: widget.video, timer: current);
+      })));
     });
 
     return Scaffold(
@@ -31,7 +44,7 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
           children: [
             // BACKGROUND IMAGE
             Image.asset(
-              "assets/images/cars.jpg",
+              widget.video.toString(),
               fit: BoxFit.cover,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
@@ -43,18 +56,27 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-                child: Row(
-                  children: const [
-                    Icon(Icons.circle, color: Colors.red, size: 20),
-                    SizedBox(width: 20),
-                    Text(
-                      "Live Monitoring",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    )
-                  ],
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.15,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(170, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.circle, color: Colors.red, size: 20),
+                      SizedBox(width: 20),
+                      Text(
+                        "Live Monitoring",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

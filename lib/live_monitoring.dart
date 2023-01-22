@@ -10,17 +10,21 @@ class LiveMonitoring extends StatefulWidget {
 
 class _LiveMonitoringState extends State<LiveMonitoring> {
   List videos = [
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "assets/videos/image.gif",
+    "assets/videos/1.gif",
+    "assets/videos/2.gif",
+    "assets/videos/3.gif",
+    "assets/videos/4.gif",
+    "assets/videos/5.gif",
+    "assets/videos/6.gif",
+    "assets/videos/7.gif",
   ];
 
-  
+  @override
+  void dispose() {
+    print("CALLED DISPOSE");
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +46,10 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
                   child: Text(
                     "AVAILABLE CCTV CAMERAS",
                     style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "PT_Serif"),
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "PT_Serif",
+                    ),
                   ),
                 ),
               ],
@@ -62,6 +67,7 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
                 itemBuilder: ((context, index) {
                   return InkWell(
                     onTap: (() {
+                      setState(() {});
                       // GOING TO FULL VIEW OF THE SELECTED CAMERA
                       Navigator.push(
                         context,
@@ -88,12 +94,13 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.asset(
-                              "assets/images/cars.jpg",
+                              videos[index],
                               fit: BoxFit.cover,
                             ),
                           ), // Displaying the video
                         ),
 
+                  
                         // TEXT TO SHOW THE CAMERA NUMBER
                         Align(
                           alignment: Alignment.bottomRight,

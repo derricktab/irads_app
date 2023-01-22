@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irads_app/login.dart';
@@ -159,6 +160,39 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+              const SizedBox(height: 130),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    FirebaseAuth.instance.signOut().then((value) {
+                      // LOGOUT SNACKBAR
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 20,
+                          ),
+                          backgroundColor: Colors.orange,
+                          content: const AutoSizeText(
+                            "Logged Out Succesfully",
+                            maxLines: 1,
+                            minFontSize: 15,
+                          ),
+                        ),
+                      );
+
+                      Navigator.pushReplacementNamed(context, "login");
+                    });
+                  },
+                  child: const Icon(
+                    Icons.power_settings_new_rounded,
+                    size: 40,
+                    color: Colors.red,
+                  ),
+                ),
+              )
             ],
           ),
         ),
