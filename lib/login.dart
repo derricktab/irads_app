@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -133,18 +134,54 @@ class _LoginState extends State<Login> {
                                   .then((value) {
                                 print("LOGIN SUCCESFULL");
 
-                                // Sending the user to the homepage if login was succesfull
-                                Navigator.pushNamed(
-                                  context,
-                                  "home",
+                                // SUCCESS SNACKBAR
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                      horizontal: 20,
+                                    ),
+                                    backgroundColor: Colors.green,
+                                    content: const AutoSizeText(
+                                      "WELCOME TO IRADS!",
+                                      maxLines: 1,
+                                      minFontSize: 15,
+                                    ),
+                                  ),
                                 );
+
+                                // Sending the user to the homepage if login was succesfull
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    "home",
+                                  );
+                                });
 
                                 print("GONE TO HOME");
                               }).onError((error, stackTrace) {
-                                setState(() {
-                                  errorMessage = error;
-                                });
-                                print(errorMessage);
+                                // ERROR SNACKBAR
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                      horizontal: 20,
+                                    ),
+                                    backgroundColor: Colors.red,
+                                    content: AutoSizeText(
+                                      error.toString().split("]").last,
+                                      maxLines: 1,
+                                      minFontSize: 15,
+                                    ),
+                                  ),
+                                );
                               });
                             }
                           }),

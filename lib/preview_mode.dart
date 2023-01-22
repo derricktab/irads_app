@@ -30,16 +30,51 @@ class _PreviewModeState extends State<PreviewMode> {
       videoPlayerController: videoPlayerController,
       autoPlay: true,
       looping: true,
+      fullScreenByDefault: true,
+      aspectRatio: MediaQuery.of(context).size.width /
+          MediaQuery.of(context).size.height,
     );
 
     return Scaffold(
-      body: Container(
-        color: Colors.green,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Chewie(
-          controller: chewieController,
-        ),
+      // backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Container(
+            color: Colors.black87,
+            child: Chewie(
+              controller: chewieController,
+            ),
+          ),
+
+          Positioned(
+            top: 30,
+            left: 0,
+            child: Container(
+              margin: const EdgeInsets.only(top: 30, right: 30),
+              width: 250,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(164, 0, 0, 0),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.play_circle_fill,
+                    color: Colors.green[600],
+                  ),
+                  const Text(
+                    "Preview Mode",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

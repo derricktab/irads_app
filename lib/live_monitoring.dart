@@ -9,7 +9,6 @@ class LiveMonitoring extends StatefulWidget {
 }
 
 class _LiveMonitoringState extends State<LiveMonitoring> {
-
   List videos = [
     "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
     "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
@@ -21,6 +20,7 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
     "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
   ];
 
+  
 
   @override
   Widget build(BuildContext context) {
@@ -60,26 +60,41 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
                   mainAxisSpacing: 15,
                 ),
                 itemBuilder: ((context, index) {
-                
-
                   return InkWell(
-                     onTap: (() {
-                          // GOING TO FULL VIEW OF THE SELECTED CAMERA
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: ((context) {
-                                return FullLiveMonitoring(
-                                  index: index + 1,
-                                  video: videos[index],
-                                );
-                              }),
-                            ),
-                          );
-                          print("GONE TO FULL VIEW");
-                        }),
-                    child: Stack(fit: StackFit.expand,
+                    onTap: (() {
+                      // GOING TO FULL VIEW OF THE SELECTED CAMERA
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) {
+                            return FullLiveMonitoring(
+                              index: index + 1,
+                              video: videos[index],
+                            );
+                          }),
+                        ),
+                      );
+                    }),
+                    child: Stack(
+                      fit: StackFit.passthrough,
                       children: [
+                        // SHOWIGN THE CAMERA FEED
+                        Container(
+                          height: 300,
+                          width: 300,
+                          decoration: BoxDecoration(
+                              // color: Colors.orange,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              "assets/images/cars.jpg",
+                              fit: BoxFit.cover,
+                            ),
+                          ), // Displaying the video
+                        ),
+
+                        // TEXT TO SHOW THE CAMERA NUMBER
                         Align(
                           alignment: Alignment.bottomRight,
                           child: Padding(
@@ -97,14 +112,6 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
                             ),
                           ),
                         ),
-                        Container(
-                          height: 300,
-                          width: 300,
-                          decoration: BoxDecoration(
-                              color: Colors.orange,
-                              borderRadius: BorderRadius.circular(20)),                              // Displaying the video
-                              
-                        )
                       ],
                     ),
                   );

@@ -12,9 +12,16 @@ class FullLiveMonitoring extends StatefulWidget {
 }
 
 class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
+  DateTime current = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
-    print("FULL SCREEN VIDEO LOADED");
+    Stream<DateTime> timer =
+        Stream.periodic(const Duration(milliseconds: 1), (i) {
+      current = current.add(const Duration(milliseconds: 1));
+      return current;
+    });
+
     return Scaffold(
       body: Container(
         color: Colors.purple,
@@ -23,24 +30,32 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
         child: Stack(
           children: [
             // BACKGROUND IMAGE
-            Expanded(
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: Image.asset("assets/images/cars.jpg"),
-              ),
+            Image.asset(
+              "assets/images/cars.jpg",
+              fit: BoxFit.cover,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
             ),
 
             // LIVE MONITORING
             Align(
               alignment: Alignment.topLeft,
-              child: Row(
-                children: const [
-                  Icon(Icons.circle, color: Colors.red, size: 20),
-                  Text(
-                    "Live Monitoring",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  )
-                ],
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                child: Row(
+                  children: const [
+                    Icon(Icons.circle, color: Colors.red, size: 20),
+                    SizedBox(width: 20),
+                    Text(
+                      "Live Monitoring",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    )
+                  ],
+                ),
               ),
             ),
 
@@ -48,29 +63,47 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
             Align(
               alignment: Alignment.topRight,
               child: Container(
-                height: 20,
-                width: 100,
+                margin: const EdgeInsets.only(top: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                height: 42,
+                width: 300,
                 decoration: const BoxDecoration(
-                  color: const Color.fromARGB(161, 0, 0, 0),
+                  color: Color.fromARGB(161, 0, 0, 0),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     bottomLeft: Radius.circular(15),
                   ),
                 ),
-                child: const Text(
-                  "Tue 29-Sept-2022 06:32:43 PM",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                child: StreamBuilder<DateTime>(
+                    stream: timer,
+                    builder: (context, snapshot) {
+                      return Text(
+                        snapshot.data.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          // fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      );
+                    }),
               ),
             ),
 
             // CAMERA NUMBER
             Align(
               alignment: Alignment.bottomRight,
-              child: Text(
-                "CAMERA 0${widget.index.toString()}",
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+                child: Text(
+                  "CAMERA 0${widget.index.toString()}",
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22),
+                ),
               ),
             )
           ],

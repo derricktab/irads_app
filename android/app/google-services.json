@@ -29,6 +29,13 @@
             {
               "client_id": "905209403991-rg324qg75emplc8quudd4o3enur4v1kf.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "905209403991-8038vc35iq3mt5im5b0n13lmi78jk1sc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.iradsApp"
+              }
             }
           ]
         }
