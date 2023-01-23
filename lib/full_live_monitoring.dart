@@ -28,11 +28,19 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
       return current;
     });
 
-    Timer(Duration(seconds: 1), () {
-      Navigator.push(context, MaterialPageRoute(builder: ((context) {
-        return AlertScreen(
-            index: widget.index, image: widget.video, timer: current);
-      })));
+    Timer(Duration(seconds: 5), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: ((context) {
+            return AlertScreen(
+              index: widget.index,
+              image: widget.video,
+              timer: current,
+            );
+          }),
+        ),
+      );
     });
 
     return Scaffold(
@@ -71,9 +79,10 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
                       Text(
                         "Live Monitoring",
                         style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       )
                     ],
                   ),

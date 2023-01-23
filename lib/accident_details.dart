@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:video_player/video_player.dart';
 import 'package:intl/intl.dart';
 
@@ -23,14 +22,6 @@ class AccidentDetails extends StatefulWidget {
 class _AccidentDetailsState extends State<AccidentDetails> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
-
-  void _sendSMS(String message, List<String> recipents) async {
-    String _result = await sendSMS(message: message, recipients: recipents)
-        .catchError((onError) {
-      print(onError);
-    });
-    print(_result);
-  }
 
   @override
   void initState() {
@@ -289,8 +280,7 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                           InkWell(
                             onTap: () {
                               Navigator.pop(context);
-                              _sendSMS("Please dont respond to the accident",
-                                  ["256754893983"]);
+                              
                               // ALERTS RESOLVED SNACKBAR
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
