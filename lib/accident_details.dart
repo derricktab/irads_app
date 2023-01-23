@@ -1,25 +1,92 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
+import 'package:video_player/video_player.dart';
+import 'package:intl/intl.dart';
 
 class AccidentDetails extends StatefulWidget {
   final String video;
   final String image;
   final DateTime accidentDate;
+  final String location;
   const AccidentDetails(
       {super.key,
       required this.video,
       required this.accidentDate,
-      required this.image});
+      required this.image,
+      required this.location});
 
   @override
   State<AccidentDetails> createState() => _AccidentDetailsState();
 }
 
 class _AccidentDetailsState extends State<AccidentDetails> {
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
+
+  void _sendSMS(String message, List<String> recipents) async {
+    String _result = await sendSMS(message: message, recipients: recipents)
+        .catchError((onError) {
+      print(onError);
+    });
+    print(_result);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Create and store the VideoPlayerController. The VideoPlayerController
+    // offers several different constructors to play videos from assets, files,
+    // or the internet.
+    _controller = VideoPlayerController.asset(
+      "assets/videos/10.mp4",
+    );
+    _controller.setVolume(0);
+
+    _initializeVideoPlayerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    // Ensure disposing of the VideoPlayerController to free up resources.
+    _controller.dispose();
+
+    super.dispose();
+  }
+
+  // FORMAT THE ACCIDENT TIME IN APPROPRIATE FORMAT
+  getAccidentTime() {
+    print("THE HOUR OF THE ACCDIENT IS: ${widget.accidentDate}");
+    var hour = widget.accidentDate.hour > 12
+        ? widget.accidentDate.hour - 12
+        : widget.accidentDate.hour == 0
+            ? 12
+            : widget.accidentDate.hour;
+    var minutes = widget.accidentDate.minute;
+    var seconds = widget.accidentDate.second;
+    var meridian = widget.accidentDate.hour >= 12 ? "PM" : "AM";
+
+    var time =
+        "${hour.toString().padLeft(2, "0")}:$minutes:${seconds.toString().padLeft(2, "0")} $meridian";
+    return time;
+  }
+
+  // FORMAT ACCIDENT DATE IN APPROPRIATE FORMAT
+  getAccidentDate() {
+    var day = widget.accidentDate.day;
+    var month =
+        DateFormat('MMMM').format(DateTime(0, widget.accidentDate.month));
+    var year = widget.accidentDate.year;
+
+    var date = "$day-$month-$year";
+    return date;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // var date = widget.accidentDate.day
-    // var time =
+    var date = getAccidentDate();
+    var time = getAccidentTime();
     return Scaffold(
       body: Stack(
         children: [
@@ -71,13 +138,62 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    color: Colors.red,
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width * 0.3,
+                  // SHORT VIDEO OF THE ACCIDENT
+                  FutureBuilder(
+                    future: _initializeVideoPlayerFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                width: 1,
+                                color: Colors.red,
+                              )),
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: VideoPlayer(_controller),
+                            ),
+
+                            // PLAY AND PAUSE ICON
+                            Positioned(
+                              bottom: 160,
+                              left: 145,
+                              child: IconButton(
+                                onPressed: () {
+                                  // Wrap the play or pause in a call to `setState`. This ensures the
+                                  // correct icon is shown.
+                                  setState(() {
+                                    // If the video is playing, pause it.
+                                    if (_controller.value.isPlaying) {
+                                      _controller.pause();
+                                    } else {
+                                      // If the video is paused, play it.
+                                      _controller.play();
+                                    }
+                                  });
+                                },
+                                icon: Icon(
+                                  _controller.value.isPlaying
+                                      ? Icons.pause
+                                      : Icons.play_circle_fill_rounded,
+                                  size: 50,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
                   ),
-                  const SizedBox(width: 40),
+                  const SizedBox(width: 30),
+
+                  // RIGHT COLUMN FOR OTHER ACCIDENT DETAILS
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,13 +209,14 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                             ),
                           ),
                           AutoSizeText(
-                            widget.accidentDate.toString(),
+                            date.toString(),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: const TextStyle(fontSize: 24),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 10),
 
                       // ACCIDENT TIME
                       Row(
@@ -112,13 +229,14 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                             ),
                           ),
                           AutoSizeText(
-                            widget.accidentDate.toString(),
+                            time,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: const TextStyle(fontSize: 24),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 10),
 
                       // ACCIDENT LOCATION
                       Row(
@@ -131,13 +249,14 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                             ),
                           ),
                           AutoSizeText(
-                            widget.accidentDate.toString(),
+                            widget.location,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             style: const TextStyle(fontSize: 24),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 10),
 
                       // ACCIDENT SEVERITY
                       Row(
@@ -160,6 +279,7 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 20),
 
                       // ACTION BUTTONS
                       Row(
@@ -168,6 +288,28 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                           // RESOLVE ALERTS BUTTON
                           InkWell(
                             onTap: () {
+                              Navigator.pop(context);
+                              _sendSMS("Please dont respond to the accident",
+                                  ["256754893983"]);
+                              // ALERTS RESOLVED SNACKBAR
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    horizontal: 20,
+                                  ),
+                                  backgroundColor: Colors.green,
+                                  content: const AutoSizeText(
+                                    "ALERTS RESOLVED",
+                                    maxLines: 1,
+                                    textAlign: TextAlign.center,
+                                    minFontSize: 15,
+                                  ),
+                                ),
+                              );
                               print("RESOLVING ALERTS");
                             },
                             child: Container(
@@ -190,7 +332,7 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                               ),
                             ),
                           ),
-                          const SizedBox(),
+                          const SizedBox(width: 30),
 
                           // BACK BUTTON
                           InkWell(

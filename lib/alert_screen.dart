@@ -77,7 +77,7 @@ class _AlertScreenState extends State<AlertScreen> {
                         beginColor: Colors.yellow,
                         endColor: Colors.red,
                         // times: 10,
-                        duration: Duration(microseconds: 30),
+                        duration: Duration(seconds: 1),
                       ),
                     ],
                   ),
@@ -186,7 +186,12 @@ class _AlertScreenState extends State<AlertScreen> {
                     context,
                     MaterialPageRoute(
                       builder: ((context) {
-                        return AccidentDetails(image: widget.image!, video: widget.image!, accidentDate: widget.timer);
+                        return AccidentDetails(
+                          image: widget.image!,
+                          video: widget.image!,
+                          accidentDate: widget.timer,
+                          location: "CAMERA${widget.index}",
+                        );
                       }),
                     ),
                   );
