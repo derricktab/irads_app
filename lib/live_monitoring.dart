@@ -14,6 +14,7 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
     "assets/videos/1.gif",
     "assets/videos/2.gif",
     "assets/videos/3.gif",
+    "assets/videos/cars.gif",
     "assets/videos/4.gif",
     "assets/videos/5.gif",
     "assets/videos/6.gif",
@@ -100,7 +101,6 @@ class _LiveMonitoringState extends State<LiveMonitoring> {
                           ), // Displaying the video
                         ),
 
-                  
                         // TEXT TO SHOW THE CAMERA NUMBER
                         Align(
                           alignment: Alignment.bottomRight,

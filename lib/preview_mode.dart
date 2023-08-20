@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
 import 'package:video_player/video_player.dart';
 
 class PreviewMode extends StatefulWidget {
@@ -10,11 +11,12 @@ class PreviewMode extends StatefulWidget {
 }
 
 class _PreviewModeState extends State<PreviewMode> {
-  final videoPlayerController = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4');
+  final videoPlayerController =
+      VideoPlayerController.asset('assets/videos/accidents.mp4');
 
   initializeVideoController() async {
     await videoPlayerController.initialize();
+    videoPlayerController.setVolume(0);
   }
 
   @override
@@ -45,7 +47,6 @@ class _PreviewModeState extends State<PreviewMode> {
               controller: chewieController,
             ),
           ),
-
           Positioned(
             top: 30,
             left: 0,

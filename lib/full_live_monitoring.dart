@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-
+import 'package:http/http.dart' as http;
 import 'package:irads_app/alert_screen.dart';
+import 'dart:convert';
+
+import 'package:twilio_flutter/twilio_flutter.dart';
 
 class FullLiveMonitoring extends StatefulWidget {
   final int? index;
@@ -16,9 +19,18 @@ class FullLiveMonitoring extends StatefulWidget {
 
 class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
   DateTime current = DateTime.now();
+  TwilioFlutter? twilioFlutter;
 
   @override
-  void initState() {}
+  void initState() {
+    twilioFlutter = TwilioFlutter(
+        accountSid:
+            'AC26fdfd8bdd076d809bb9ea04f0a9c42d', // replace *** with Account SID
+        authToken:
+            '73476db9b59a1f625b330edb62863234', // replace xxx with Auth Token
+        twilioNumber: '+16692300626' // replace .... with Twilio Number
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +40,7 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
       return current;
     });
 
-    Timer(Duration(seconds: 5), () {
+    Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -41,6 +53,12 @@ class _FullLiveMonitoringState extends State<FullLiveMonitoring> {
           }),
         ),
       );
+
+      twilioFlutter!.sendSMS(
+          toNumber: '+256726073018',
+          messageBody:
+              'An Accident has just happened at this location https://goo.gl/maps/417HogxCLVhxWY8z9 \n Please respond as soon as possible.');
+      //Use sendSMS with the recipient number and message body.
     });
 
     return Scaffold(

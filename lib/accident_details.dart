@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:intl/intl.dart';
 
@@ -8,12 +10,7 @@ class AccidentDetails extends StatefulWidget {
   final String image;
   final DateTime accidentDate;
   final String location;
-  const AccidentDetails(
-      {super.key,
-      required this.video,
-      required this.accidentDate,
-      required this.image,
-      required this.location});
+  const AccidentDetails({super.key, required this.video, required this.accidentDate, required this.image, required this.location});
 
   @override
   State<AccidentDetails> createState() => _AccidentDetailsState();
@@ -22,6 +19,7 @@ class AccidentDetails extends StatefulWidget {
 class _AccidentDetailsState extends State<AccidentDetails> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
+  TwilioFlutter? twilioFlutter;
 
   @override
   void initState() {
@@ -31,18 +29,23 @@ class _AccidentDetailsState extends State<AccidentDetails> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     _controller = VideoPlayerController.asset(
-      "assets/videos/10.mp4",
+      "assets/videos/boda10.mp4",
     );
     _controller.setVolume(0);
 
     _initializeVideoPlayerFuture = _controller.initialize();
+
+    twilioFlutter = TwilioFlutter(
+        accountSid: 'AC26fdfd8bdd076d809bb9ea04f0a9c42d', // replace *** with Account SID
+        authToken: '73476db9b59a1f625b330edb62863234', // replace xxx with Auth Token
+        twilioNumber: '+16692300626' // replace .... with Twilio Number
+        );
   }
 
   @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
     _controller.dispose();
-
     super.dispose();
   }
 
@@ -58,20 +61,27 @@ class _AccidentDetailsState extends State<AccidentDetails> {
     var seconds = widget.accidentDate.second;
     var meridian = widget.accidentDate.hour >= 12 ? "PM" : "AM";
 
-    var time =
-        "${hour.toString().padLeft(2, "0")}:$minutes:${seconds.toString().padLeft(2, "0")} $meridian";
+    var time = "${hour.toString().padLeft(2, "0")}:$minutes:${seconds.toString().padLeft(2, "0")} $meridian";
     return time;
   }
 
   // FORMAT ACCIDENT DATE IN APPROPRIATE FORMAT
   getAccidentDate() {
     var day = widget.accidentDate.day;
-    var month =
-        DateFormat('MMMM').format(DateTime(0, widget.accidentDate.month));
+    var month = DateFormat('MMMM').format(DateTime(0, widget.accidentDate.month));
     var year = widget.accidentDate.year;
 
     var date = "$day-$month-$year";
     return date;
+  }
+
+  final Uri _url = Uri.parse('https://goo.gl/maps/417HogxCLVhxWY8z9');
+
+  Future<void> _launchUrl() async {
+    print("LAUNCH URL CALLED");
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 
   @override
@@ -166,9 +176,7 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                                   });
                                 },
                                 icon: Icon(
-                                  _controller.value.isPlaying
-                                      ? Icons.pause
-                                      : Icons.play_circle_fill_rounded,
+                                  _controller.value.isPlaying ? Icons.pause : Icons.play_circle_fill_rounded,
                                   size: 50,
                                 ),
                               ),
@@ -239,11 +247,22 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                               fontSize: 25,
                             ),
                           ),
-                          AutoSizeText(
-                            widget.location,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: const TextStyle(fontSize: 24),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: InkWell(
+                              onTap: () {
+                                _launchUrl();
+                              },
+                              child: const AutoSizeText(
+                                "PXHQ+G5J Kampala, Uganda",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -280,13 +299,12 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                           InkWell(
                             onTap: () {
                               Navigator.pop(context);
-                              
+
                               // ALERTS RESOLVED SNACKBAR
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   behavior: SnackBarBehavior.floating,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
+                                  width: MediaQuery.of(context).size.width * 0.4,
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 20,
                                     horizontal: 20,
@@ -300,11 +318,11 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                                   ),
                                 ),
                               );
-                              print("RESOLVING ALERTS");
+
+                              twilioFlutter!.sendSMS(toNumber: '+256726073018', messageBody: 'The accident notification that has just been sent you at this location https://goo.gl/maps/417HogxCLVhxWY8z9 \n is very minior and does not need any response, please do not respond.');
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               margin: const EdgeInsets.symmetric(vertical: 35),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -317,8 +335,7 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                               ),
                               child: const Text(
                                 "RESOLVE ALERTS",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                                style: TextStyle(color: Colors.white, fontSize: 18),
                               ),
                             ),
                           ),
@@ -330,8 +347,7 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                               Navigator.pop(context);
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               margin: const EdgeInsets.symmetric(vertical: 35),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -339,8 +355,7 @@ class _AccidentDetailsState extends State<AccidentDetails> {
                               ),
                               child: const Text(
                                 "BACK",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
+                                style: TextStyle(color: Colors.white, fontSize: 18),
                               ),
                             ),
                           ),
